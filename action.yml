@@ -1,0 +1,15 @@
+name: Kritik
+description: Reviews code changes with chatGPT
+
+inputs:
+  github-token:
+    description: 'GitHub token'
+    required: true
+  kritik-token:
+    description: 'KritikAI token'
+    required: true
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  entrypoint: '/entrypoint.sh'
