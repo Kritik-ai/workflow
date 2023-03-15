@@ -1,5 +1,8 @@
 name: KritikAI code review
 description: Automated code reviews for pull requests.
+branding:
+  color: orange
+  icon: git-pull-request
 
 inputs:
   github-token:
