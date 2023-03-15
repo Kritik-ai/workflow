@@ -1,5 +1,5 @@
-name: KritikAI
-description: Automated code reviews.
+name: KritikAI code review
+description: Automated code reviews for pull requests.
 
 inputs:
   github-token:
