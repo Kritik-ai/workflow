@@ -1,5 +1,5 @@
-name: Kritik
-description: Reviews code changes with chatGPT
+name: KritikAI
+description: Automated code reviews.
 
 inputs:
   github-token:
