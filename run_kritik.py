@@ -36,7 +36,7 @@ data = {}
 data["token"] = kritik_token
 data["data"] = {}
 for commit in pr.get_commits():
-    sha = commit.sha
+    commit_sha = commit.sha
     files = commit.files
     msg = commit.commit.message
     data["data"][commit_sha] = {}
