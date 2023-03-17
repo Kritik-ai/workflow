@@ -37,8 +37,9 @@ data["token"] = kritik_token
 data["data"] = {}
 for commit in pr.get_commits():
     commit = commit.commit
+    files = commit.files
     data["data"][commit] = {}
-    for file in commit.files:
+    for file in files:
         content = get_file_content(file, gh_token, gh_user)
         data["data"][commit][file.filename] = {}
         data["data"][commit][file.filename]["full_file"] = content
