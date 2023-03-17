@@ -42,7 +42,7 @@ for commit in pr.get_commits():
         data["data"][commit][file.filename] = {}
         data["data"][commit][file.filename]["full_file"] = content
         data["data"][commit][file.filename]["patch"] = file.patch
-        data["data"][commit][file.filename]["msg"] = commit.message
+        data["data"][commit][file.filename]["msg"] = commit.commit.message
 
 json_data = json.dumps(data)
 headers = {'Content-type': 'application/json'}
