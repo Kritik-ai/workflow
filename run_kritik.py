@@ -36,15 +36,16 @@ data = {}
 data["token"] = kritik_token
 data["data"] = {}
 for commit in pr.get_commits():
+    sha = commit.sha
     files = commit.files
-    commit = commit.commit
-    data["data"][commit] = {}
+    msg = commit.commit.message
+    data["data"][commit_sha] = {}
     for file in files:
         content = get_file_content(file, gh_token, gh_user)
-        data["data"][commit][file.filename] = {}
-        data["data"][commit][file.filename]["full_file"] = content
-        data["data"][commit][file.filename]["patch"] = file.patch
-        data["data"][commit][file.filename]["msg"] = commit.message
+        data["data"][commit_sha][file.filename] = {}
+        data["data"][commit_sha][file.filename]["full_file"] = content
+        data["data"][commit_sha][file.filename]["patch"] = file.patch
+        data["data"][commit_sha][file.filename]["msg"] = msg
 
 json_data = json.dumps(data)
 headers = {'Content-type': 'application/json'}
