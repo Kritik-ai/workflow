@@ -61,6 +61,5 @@ data = json.loads(response.text)
 
 for commit, commit_data in data.items():
     for filename, file_data in commit_data.items():
-        review = file_data["review"]
-        line_num = file_data["line_num"]
+        for line_num, review in file_data.items():
         pr.create_review_comment(review, commit, filename, line_num)
