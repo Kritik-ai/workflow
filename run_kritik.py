@@ -66,4 +66,4 @@ for sha, commit_data in data.items():
     commit = commits[sha]
     for filename, file_data in commit_data.items():
         for line_num, review in file_data.items():
-            pr.create_review_comment(review, commit, filename, line_num)
+            pr.create_review_comment(review, commit, filename, int(line_num))
