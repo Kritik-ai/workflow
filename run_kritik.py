@@ -32,20 +32,23 @@ def get_file_content(file, gh_token=None, gh_username=None):
 pr_num = gh_ref[gh_ref.find("pull/")+len("pull/"):gh_ref.rfind("/")]
 pr = repo.get_pull(int(pr_num))
 
+commits = {}
+for commit in pr.get_commits():
+    commits[commit.sha] = commit
+
 data = {}
 data["token"] = kritik_token
 data["data"] = {}
-for commit in pr.get_commits():
-    commit_sha = commit.sha
+for sha, commit in commits.items():
     files = commit.files
     msg = commit.commit.message
-    data["data"][commit_sha] = {}
+    data["data"][sha] = {}
     for file in files:
         content = get_file_content(file, gh_token, gh_user)
-        data["data"][commit_sha][file.filename] = {}
-        data["data"][commit_sha][file.filename]["full_file"] = content
-        data["data"][commit_sha][file.filename]["patch"] = file.patch
-        data["data"][commit_sha][file.filename]["msg"] = msg
+        data["data"][sha][file.filename] = {}
+        data["data"][sha][file.filename]["full_file"] = content
+        data["data"][sha][file.filename]["patch"] = file.patch
+        data["data"][sha][file.filename]["msg"] = msg
 
 json_data = json.dumps(data)
 headers = {'Content-type': 'application/json'}
@@ -59,7 +62,8 @@ if response.status_code != 200:
 print("Request response:", response.text)
 data = json.loads(response.text)
 
-for commit, commit_data in data.items():
+for sha, commit_data in data.items():
+    commit = commits[sha]
     for filename, file_data in commit_data.items():
         for line_num, review in file_data.items():
             pr.create_review_comment(review, commit, filename, line_num)
