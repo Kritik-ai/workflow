@@ -58,9 +58,9 @@ data = json.loads(response.text)
 for filename, file_data in data.items():
     for line_num, review in file_data.items():
         for commit in reversed(commits):
-        # find the latest commit that contributed to this change
-        try:
-            pr.create_review_comment(review, commit, filename, int(line_num))
-            break
-        except AssertionError:
-            pass
+            # find the latest commit that contributed to this change
+            try:
+                pr.create_review_comment(review, commit, filename, int(line_num))
+                break
+            except AssertionError:
+                pass
