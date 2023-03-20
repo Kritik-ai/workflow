@@ -31,24 +31,17 @@ def get_file_content(file, gh_token=None, gh_username=None):
 
 pr_num = gh_ref[gh_ref.find("pull/")+len("pull/"):gh_ref.rfind("/")]
 pr = repo.get_pull(int(pr_num))
-
-commits = {}
-for commit in pr.get_commits():
-    commits[commit.sha] = commit
+commits = list(pr.get_commits())
+files = list(pr.get_files())
 
 data = {}
 data["token"] = kritik_token
 data["data"] = {}
-for sha, commit in commits.items():
-    files = commit.files
-    msg = commit.commit.message
-    data["data"][sha] = {}
-    for file in files:
-        content = get_file_content(file, gh_token, gh_user)
-        data["data"][sha][file.filename] = {}
-        data["data"][sha][file.filename]["full_file"] = content
-        data["data"][sha][file.filename]["patch"] = file.patch
-        data["data"][sha][file.filename]["msg"] = msg
+for file in files:
+    content = get_file_content(file, gh_token, gh_user)
+    data["data"][file.filename] = {}
+    data["data"][file.filename]["full_file"] = content
+    data["data"][file.filename]["patch"] = file.patch
 
 json_data = json.dumps(data)
 headers = {'Content-type': 'application/json'}
@@ -62,8 +55,12 @@ if response.status_code != 200:
 print("Request response:", response.text)
 data = json.loads(response.text)
 
-for sha, commit_data in data.items():
-    commit = commits[sha]
-    for filename, file_data in commit_data.items():
-        for line_num, review in file_data.items():
+for filename, file_data in data.items():
+    for line_num, review in file_data.items():
+        for commit in reversed(commits):
+        # find the latest commit that contributed to this change
+        try:
             pr.create_review_comment(review, commit, filename, int(line_num))
+            break
+        except AssertionError:
+            pass
