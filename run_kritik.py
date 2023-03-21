@@ -61,6 +61,5 @@ for filename, file_data in data.items():
             # find the latest commit that contributed to this change
             try:
                 pr.create_review_comment(review, commit, filename, int(line_num))
-                break
-            except AssertionError:
+            except:
                 pass
