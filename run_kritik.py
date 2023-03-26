@@ -75,6 +75,6 @@ for filename, file_data in data.items():
     for line_num, review in file_data.items():
         # find the latest commit that contributed to this change
         for commit in reversed(commits):
-            resp = create_review(review, commit.sha, filename, int(line_num))
+            resp = create_review(gh_token, repo, pr, review, commit.sha, filename, int(line_num))
             if resp.status_code == 201:
                 break
