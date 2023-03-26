@@ -56,7 +56,7 @@ print("Request response:", response.text)
 data = json.loads(response.text)
 
 def create_review(token, repo, pr, body, commit_sha, filename, line_num):
-    url = "https://api.github.com/repos/"+repo.full_name+"/pulls/"+pr.number+"/comments"
+    url = "https://api.github.com/repos/"+repo.full_name+"/pulls/"+str(pr.number)+"/comments"
     headers = {
         "Accept": "application/vnd.github+json",
         "Authorization": "Bearer "+token,
