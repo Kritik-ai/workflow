@@ -55,11 +55,26 @@ if response.status_code != 200:
 print("Request response:", response.text)
 data = json.loads(response.text)
 
+def create_review(token, repo, pr, body, commit_sha, filename, line_num):
+    url = "https://api.github.com/repos/"+repo.full_name+"/pulls/"+pr.number+"/comments"
+    headers = {
+        "Accept": "application/vnd.github+json",
+        "Authorization": "Bearer "+token,
+        "X-GitHub-Api-Version": "2022-11-28"
+    }
+    data = {
+        "body": body,
+        "commit_id": commit_sha,
+        "path": filename,
+        "line": line_num,
+    }
+    response = requests.post(url, headers=headers, json=data)
+    return response
+
 for filename, file_data in data.items():
     for line_num, review in file_data.items():
+        # find the latest commit that contributed to this change
         for commit in reversed(commits):
-            # find the latest commit that contributed to this change
-            try:
-                pr.create_review_comment(review, commit, filename, int(line_num))
-            except:
-                pass
+            resp = create_review(review, commit.sha, filename, int(line_num))
+            if resp.status_code == 201:
+                break
