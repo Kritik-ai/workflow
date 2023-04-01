@@ -52,6 +52,11 @@ if response.status_code != 200:
     print(response.text)
     exit()
 
+if response.text == "Invalid token":
+    print("Kritik token was not valid!")
+    print("To get a valid token, visit kritikai.com and buy a subscription.")
+    exit()
+
 print("Request response:", response.text)
 data = json.loads(response.text)
 
